@@ -29,7 +29,7 @@ module.exports = {
     targetPoint
   },
 
-  nodeFileModule: ['compute.js'],
+  nodeFilesModule: ['compute.js'],
 
   workSize: points.length,
 
