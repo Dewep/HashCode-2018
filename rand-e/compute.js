@@ -77,14 +77,14 @@ module.exports = async function (config, toCompute) {
           r.dist = dist(v.pR, v.pC, r.sR, r.sC)
           r.before = Math.max(step + r.dist, r.eS)
           r.points = r.d + (r.before === r.eS ? def.bonus : 0)
-          r.ratio = r.points / (r.before - step + r.d)
+          r.ratio = Math.round(r.points * 100 / (r.before - step + r.d))
           return r
         }).filter(r => {
           return r.before + r.d < r.lT
         }).sort((a, b) => b.ratio - a.ratio)
         if (inter.length) {
           // console.log(step)
-          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 10) - 1))
+          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 2) - 1))
           const ride = inter[rideIndex]
           ride.taken = true
           v.stepUntilAvailable = ride.before + ride.d

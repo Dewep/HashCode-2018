@@ -19,7 +19,7 @@ module.exports = {
       return null
     }
     state.work++
-    return new Array(10)
+    return new Array(1)
   },
 
   analyze (toCompute, results, state) {
