@@ -10,7 +10,7 @@ module.exports = {
   configNode: {
   },
 
-  nodeFilesModule: ['compute.js', 'a_example.json'],
+  nodeFilesModule: ['compute.js', 'data.json'],
 
   workSize: 2048,
 

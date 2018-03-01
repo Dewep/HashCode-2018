@@ -47,7 +47,7 @@ function score (def, sol) {
 }
 
 module.exports = async function (config, toCompute) {
-  const def = require('./a_example.json')
+  const def = require('./data.json')
   let step = 0
 
   const veh = []
