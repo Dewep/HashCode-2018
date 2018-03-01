@@ -19,7 +19,7 @@ module.exports = {
       return []
     }
     state.work++
-    return new Array(100)
+    return new Array(5)
   },
 
   analyze (toCompute, results, state) {

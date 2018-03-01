@@ -88,7 +88,6 @@ module.exports = async function (config, toCompute) {
   }
 
   const sol = veh.map(v => v.sols)
-  console.log({ sol })
   return {
     sol,
     score: score(def, sol)

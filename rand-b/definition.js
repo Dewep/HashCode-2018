@@ -16,10 +16,10 @@ module.exports = {
 
   next (state) {
     if (state.work > 2048) {
-      return []
+      return null
     }
     state.work++
-    return new Array(100)
+    return new Array(10)
   },
 
   analyze (toCompute, results, state) {
