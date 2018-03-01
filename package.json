@@ -1,0 +1,15 @@
+{
+  "name": "hashcode-yt-test-round",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dewep/HashCode-yt-test-round.git"
+  },
+  "license": "GNU GPLv3",
+  "dependencies": {
+    "botcluster": "git+https://github.com/Dewep/BotCluster.git"
+  }
+}
