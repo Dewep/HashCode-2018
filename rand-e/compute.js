@@ -60,20 +60,24 @@ module.exports = async function (config, toCompute) {
     })
   }
 
-  const rides = def.rides.map((r, i) => ({
+  let rides = def.rides.map((r, i) => ({
     ...r,
     i,
     taken: false
   }))
 
   while (step < def.nbSteps) {
+    let nextStep = def.nbSteps
     // console.log('STEP', step)
+    const ran = false
     veh.forEach((v, vI) => {
+      nextStep = Math.min(v.stepUntilAvailable, nextStep)
       if (v.stepUntilAvailable <= step) {
         const inter = rides.filter(r => !r.taken).filter(r => {
           return Math.max(step + dist(v.pR, v.pC, r.sR, r.sC), r.eS) + r.d < r.lT
         })
         if (inter.length) {
+          // console.log(step)
           const rideIndex = Math.round(Math.random() * (inter.length - 1))
           const ride = inter[rideIndex]
           ride.taken = true
@@ -84,7 +88,8 @@ module.exports = async function (config, toCompute) {
         }
       }
     })
-    step++
+    rides = rides.filter(r => step < r.lT - r.d)
+    step = Math.max(nextStep, step + 1)
   }
 
   const sol = veh.map(v => v.sols)
