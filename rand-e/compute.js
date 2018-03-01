@@ -80,7 +80,7 @@ module.exports = async function (config, toCompute) {
 
   while (step < def.nbSteps) {
     let nextStep = def.nbSteps
-    // console.log('STEP', step)
+    console.log('STEP', step)
     const ran = false
     veh.forEach((v, vI) => {
       nextStep = Math.min(v.stepUntilAvailable, nextStep)
@@ -88,7 +88,7 @@ module.exports = async function (config, toCompute) {
         const inter = rides.filter(r => !r.taken).map(r => {
           r.dist = dist(v.pR, v.pC, r.sR, r.sC)
           r.before = Math.max(step + r.dist, r.eS)
-          r.points = r.d + (r.before === r.eS ? def.bonus : 0)
+          r.points = r.d > 1000 ? 1 : r.d + (r.before === r.eS ? def.bonus : 0)
           r.ratio = Math.round(r.points * 100 / (r.before - step + r.d))
           return r
         }).filter(r => {

@@ -88,7 +88,7 @@ module.exports = async function (config, toCompute) {
         const inter = rides.filter(r => !r.taken).map(r => {
           r.dist = dist(v.pR, v.pC, r.sR, r.sC)
           r.before = Math.max(step + r.dist, r.eS)
-          r.points = r.d + (r.before === r.eS ? def.bonus : 0)
+          r.points = r.d > 4000 ? (r.d / 3) : (r.d + (r.before === r.eS ? def.bonus : 0))
           r.ratio = Math.round(r.points * 100 / (r.before - step + r.d))
           return r
         }).filter(r => {
@@ -96,7 +96,7 @@ module.exports = async function (config, toCompute) {
         }).sort((a, b) => b.ratio - a.ratio)
         if (inter.length) {
           // console.log(step)
-          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 10) - 1))
+          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 5) - 1))
           const ride = inter[rideIndex]
           ride.taken = true
           v.stepUntilAvailable = ride.before + ride.d
@@ -111,7 +111,9 @@ module.exports = async function (config, toCompute) {
   }
 
   const sol = veh.sort((a, b) => a.i - b.i).map(v => v.sols)
-  // console.log({ sol })
+  let sum = 0
+  sol.forEach(s => { sum += s.length })
+  console.log({ sum, total: def.nbRides, perc: sum * 100 / def.nbRides })
   return {
     sol,
     score: score(def, sol)
