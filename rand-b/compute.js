@@ -60,34 +60,44 @@ module.exports = async function (config, toCompute) {
     })
   }
 
-  const rides = def.rides.map((r, i) => ({
+  let rides = def.rides.map((r, i) => ({
     ...r,
     i,
     taken: false
-  }))
+  })).sort((a, b) => a.eS - b.eS)
 
   while (step < def.nbSteps) {
+    let nextStep = def.nbSteps
     // console.log('STEP', step)
+    const ran = false
     veh.forEach((v, vI) => {
+      nextStep = Math.min(v.stepUntilAvailable, nextStep)
       if (v.stepUntilAvailable <= step) {
-        const inter = rides.filter(r => !r.taken).filter(r => {
-          return Math.max(step + dist(v.pR, v.pC, r.sR, r.sC), r.eS) + r.d < r.lT
-        })
+        const inter = rides.filter(r => !r.taken).map(r => {
+          r.dist = dist(v.pR, v.pC, r.sR, r.sC)
+          r.before = Math.max(step + r.dist, r.eS)
+          return r
+        }).filter(r => {
+          return r.before + r.d < r.lT
+        }).sort((a, b) => a.before - b.before)
         if (inter.length) {
-          const rideIndex = Math.round(Math.random() * (inter.length - 1))
+          // console.log(step)
+          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 10) - 1))
           const ride = inter[rideIndex]
           ride.taken = true
-          v.stepUntilAvailable = Math.max(step + dist(v.pR, v.pC, ride.sR, ride.sC), ride.eS) + ride.d
+          v.stepUntilAvailable = ride.before + ride.d
           v.pR = ride.fR
           v.pC = ride.fC
           v.sols.push(ride.i)
         }
       }
     })
-    step++
+    rides = rides.filter(r => step < r.lT - r.d)
+    step = Math.max(nextStep, step + 1)
   }
 
   const sol = veh.map(v => v.sols)
+  // console.log({ sol })
   return {
     sol,
     score: score(def, sol)

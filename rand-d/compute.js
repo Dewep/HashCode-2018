@@ -64,7 +64,7 @@ module.exports = async function (config, toCompute) {
     ...r,
     i,
     taken: false
-  }))
+  })).sort((a, b) => a.eS - b.eS)
 
   while (step < def.nbSteps) {
     let nextStep = def.nbSteps
@@ -73,15 +73,19 @@ module.exports = async function (config, toCompute) {
     veh.forEach((v, vI) => {
       nextStep = Math.min(v.stepUntilAvailable, nextStep)
       if (v.stepUntilAvailable <= step) {
-        const inter = rides.filter(r => !r.taken).filter(r => {
-          return Math.max(step + dist(v.pR, v.pC, r.sR, r.sC), r.eS) + r.d < r.lT
-        })
+        const inter = rides.filter(r => !r.taken).map(r => {
+          r.dist = dist(v.pR, v.pC, r.sR, r.sC)
+          r.before = Math.max(step + r.dist, r.eS)
+          return r
+        }).filter(r => {
+          return r.before + r.d < r.lT
+        }).sort((a, b) => a.before - b.before)
         if (inter.length) {
           // console.log(step)
-          const rideIndex = Math.round(Math.random() * (inter.length - 1))
+          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 10) - 1))
           const ride = inter[rideIndex]
           ride.taken = true
-          v.stepUntilAvailable = Math.max(step + dist(v.pR, v.pC, ride.sR, ride.sC), ride.eS) + ride.d
+          v.stepUntilAvailable = ride.before + ride.d
           v.pR = ride.fR
           v.pC = ride.fC
           v.sols.push(ride.i)
