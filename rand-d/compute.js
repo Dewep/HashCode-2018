@@ -46,6 +46,16 @@ function score (def, sol) {
   return points
 }
 
+function shuffle(a) {
+  var j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = a[i];
+      a[i] = a[j];
+      a[j] = x;
+  }
+}
+
 module.exports = async function (config, toCompute) {
   const def = require('./data.json')
   let step = 0
@@ -53,12 +63,14 @@ module.exports = async function (config, toCompute) {
   const veh = []
   for (let v = 0; v < def.nbVeh; v++) {
     veh.push({
+      i: v,
       pR: 0,
       pC: 0,
       stepUntilAvailable: 0,
       sols: []
     })
   }
+  shuffle(veh)
 
   let rides = def.rides.map((r, i) => ({
     ...r,
@@ -98,7 +110,7 @@ module.exports = async function (config, toCompute) {
     step = Math.max(nextStep, step + 1)
   }
 
-  const sol = veh.map(v => v.sols)
+  const sol = veh.sort((a, b) => a.i - b.i).map(v => v.sols)
   // console.log({ sol })
   return {
     sol,
