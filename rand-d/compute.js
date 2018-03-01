@@ -96,7 +96,7 @@ module.exports = async function (config, toCompute) {
         }).sort((a, b) => b.ratio - a.ratio)
         if (inter.length) {
           // console.log(step)
-          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 2) - 1))
+          const rideIndex = Math.round(Math.random() * (Math.min(inter.length, 10) - 1))
           const ride = inter[rideIndex]
           ride.taken = true
           v.stepUntilAvailable = ride.before + ride.d
